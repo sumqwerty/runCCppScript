@@ -1,0 +1,9 @@
+#!/bin/bash
+
+name=`echo $1 | cut -d '.' -f 1`
+if [[ "$1" == *"cpp"* ]]; then
+        g++ $1 -o "$name.o"
+else
+        gcc $1 -o "$name.o"
+fi;
+./"$name.o"
