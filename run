@@ -3,10 +3,36 @@
 #https://github.com/UjjwalSk
 #https://github.com/sumqwerty
 
-name=`echo $1 | cut -d '.' -f 1`
-if [[ "$1" == *"cpp"* ]]; then
-        g++ $1 -o "$name.o"
-else
-        gcc $1 -o "$name.o"
-fi;
-./"$name.o"
+# Check if a filename was provided
+if [ -z "$1" ]
+then
+    echo "Error: No file name provided." >&2
+    exit 1
+fi
+
+# Set the filename and extension
+filename=$(basename "$1")
+extension="${filename##*.}"
+
+# Check if the file is a C or C++ file
+if [ "$extension" != "c" ] && [ "$extension" != "cpp" ]
+then
+    echo "Error: Not a C or C++ file." >&2
+    exit 1
+fi
+
+# Compile the file
+if [ "$extension" = "c" ]
+then
+    compiler=gcc
+elif [ "$extension" = "cpp" ]
+then
+    compiler=g++
+fi
+"$compiler" "$filename" -o "${filename%.*}"
+
+# Run the file and save the output
+"./${filename%.*}"
+
+# Remove the object file
+rm "${filename%.*}"
